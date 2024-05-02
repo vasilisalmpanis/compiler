@@ -52,6 +52,6 @@ int Evaluator::EvaluateExpression(ExpressionSyntax *root) {
 		ExpressionSyntax *expression = dynamic_cast<ExpressionSyntax *>(parenthesized->GetExpression());
 		return EvaluateExpression(expression);
 	}
-	std::cerr << "Unexpected node: " << root->GetKind() << std::endl;
+	//std::cerr << "Unexpected node: " << root->GetKind() << std::endl;
 	throw std::runtime_error("Unexpected node");
 }

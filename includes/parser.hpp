@@ -35,7 +35,7 @@ class BinaryExpressionSyntax : virtual public ExpressionSyntax
 {
 	public:
 		BinaryExpressionSyntax(ExpressionSyntax *left, SyntaxToken *operatorToken, ExpressionSyntax *right)
-			: m_left(left), m_operatorToken(operatorToken), m_right(right), m_kind(SyntaxKind::BinaryExpression)
+			: m_left(left), m_operatorToken(operatorToken), m_right(right)
 		{
 		}
 		virtual ~BinaryExpressionSyntax();
@@ -50,7 +50,6 @@ class BinaryExpressionSyntax : virtual public ExpressionSyntax
 		ExpressionSyntax *m_left;
 		SyntaxToken *m_operatorToken;
 		ExpressionSyntax *m_right;
-		SyntaxKind m_kind;
 };
 
 class ParenthesizedExpressionSyntax : virtual public ExpressionSyntax

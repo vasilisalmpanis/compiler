@@ -1,10 +1,13 @@
 //57:57
 #pragma once
+#include <cassert>
+#include <cstdint>
 #include <iostream>
+#include <utility>
 #include <variant>
 #include <vector>
 
-enum SyntaxKind {
+enum class SyntaxKind : std::uint8_t {
 	NumberToken,
 	WhitespaceToken,
 	PlusToken,
@@ -23,6 +26,9 @@ enum SyntaxKind {
 	SyntaxTreeExpression
 };
 
+using Number = int;
+using String = std::string;
+
 class SyntaxNode {
 	public:
 		SyntaxNode();
@@ -35,17 +41,14 @@ class SyntaxNode {
 
 class SyntaxToken : virtual public SyntaxNode {
 	public:
-		SyntaxToken() {
-			m_kind = SyntaxKind::BadToken;
-			m_position = 0;
-			m_text = "";
-			m_value = 0;
-		}
-		SyntaxToken(SyntaxKind kind, int position, std::string text, std::variant<int, std::string> value) {
+		using ValueType = std::variant< Number, String, SyntaxKind>; 
+		SyntaxToken() noexcept = default;
+		SyntaxToken(SyntaxKind kind, int position, std::string text, ValueType value)
+		: m_value{ std::move(value) }
+		{
 			m_kind = kind;
 			m_position = position;
 			m_text = text;
-			m_value = value;
 		}	
 		virtual ~SyntaxToken() {}
 		SyntaxKind GetKind() override {
@@ -60,11 +63,27 @@ class SyntaxToken : virtual public SyntaxNode {
 		int GetPosition() const {
 			return m_position;
 		}
-		std::variant<int, std::string> GetValue() const {
+		std::variant<Number, String, SyntaxKind> GetValue() const {
 			return m_value;
 		}
 		SyntaxToken(const SyntaxToken &other) {
 			*this = other;
+		}
+		template<typename T>
+		[[ nodiscard ]] bool is() const noexcept
+		{
+			return std::holds_alternative<T>(m_value);
+		}
+		template<typename T>
+		[[ nodiscard ]] bool &get() const noexcept
+		{
+			assert(is <T>());
+			return std::get<T>(m_value);
+		}
+		template<typename T>
+		[[ nodiscard ]] ValueType const & value() const noexcept
+		{
+			return m_value;
 		}
 		SyntaxToken &operator=(const SyntaxToken &other) {
 			m_kind = other.m_kind;
@@ -77,7 +96,7 @@ class SyntaxToken : virtual public SyntaxNode {
 		SyntaxKind m_kind;
 		int m_position;
 		std::string m_text;
-		std::variant<int, std::string> m_value;
+		ValueType m_value;
 };
 
 class Lexer {

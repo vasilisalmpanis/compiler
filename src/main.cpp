@@ -59,7 +59,6 @@ int main()
 		}
 		// Create a syntax tree
 		ExpressionSyntax *expression = SyntaxTree::Parse(input);
-		std::cout << typeid(expression).name() << std::endl;
 		if (printTree)
 			PrettyPrint(expression, "", true);
 		// Create an evaluator and evaluate the expression
