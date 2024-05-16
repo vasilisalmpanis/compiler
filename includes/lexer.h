@@ -6,6 +6,7 @@
 #include <utility>
 #include <variant>
 #include <vector>
+#include <cassert>
 
 enum class SyntaxKind : std::uint8_t {
 	NumberToken,
@@ -75,7 +76,7 @@ class SyntaxToken : virtual public SyntaxNode {
 			return std::holds_alternative<T>(m_value);
 		}
 		template<typename T>
-		[[ nodiscard ]] bool &get() const noexcept
+		[[ nodiscard ]] T const &get() const noexcept
 		{
 			assert(is <T>());
 			return std::get<T>(m_value);
