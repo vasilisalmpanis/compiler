@@ -34,32 +34,57 @@ Parser::~Parser()
 */
 SyntaxTree* Parser::Parse()
 {
-	ExpressionSyntax *expression = ParseTerm();
+	ExpressionSyntax *expression = ParseExpression(0);
 	SyntaxToken endOfFileToken = matchToken(SyntaxKind::EndOfFileToken);
 	return new SyntaxTree(m_diagnostics, expression, endOfFileToken);
 }
 
-ExpressionSyntax* Parser::ParseExpression()
-{
-	return ParseTerm();
-}
-
-
-ExpressionSyntax* Parser::ParseTerm()
+ExpressionSyntax* Parser::ParseExpression(int parentPrecedence)
 {
 	ExpressionSyntax *left = parsePrimaryExpression();
-	while (	current().GetKind() == SyntaxKind::PlusToken||
-		current().GetKind() == SyntaxKind::MinusToken||
-		current().GetKind() == SyntaxKind::StarToken||
-		current().GetKind() == SyntaxKind::SlashToken
-			) {
+	while (true)
+	{
+		int precedence = GetBinaryOperatorPrecedence(current().GetKind());
+		if (precedence == 0 || precedence <= parentPrecedence) {
+			break;
+		}
 		SyntaxToken *operatorToken = new SyntaxToken(current());
 		nextToken();
-		ExpressionSyntax *right = ParseMultiplicativeExpression();
+		ExpressionSyntax *right = ParseExpression(precedence);
 		left = new BinaryExpressionSyntax(left, operatorToken, right);
 	}
 	return left;
 }
+
+int Parser::GetBinaryOperatorPrecedence(SyntaxKind kind)
+{
+	switch (kind) {
+		case SyntaxKind::PlusToken:
+		case SyntaxKind::MinusToken:
+			return 1;
+		case SyntaxKind::StarToken:
+		case SyntaxKind::SlashToken:
+			return 2;
+		default:
+			return 0;
+	}
+}
+
+//ExpressionSyntax* Parser::ParseTerm()
+//{
+//	ExpressionSyntax *left = parsePrimaryExpression();
+//	while (	current().GetKind() == SyntaxKind::PlusToken||
+//		current().GetKind() == SyntaxKind::MinusToken||
+//		current().GetKind() == SyntaxKind::StarToken||
+//		current().GetKind() == SyntaxKind::SlashToken
+//			) {
+//		SyntaxToken *operatorToken = new SyntaxToken(current());
+//		nextToken();
+//		ExpressionSyntax *right = ParseMultiplicativeExpression();
+//		left = new BinaryExpressionSyntax(left, operatorToken, right);
+//	}
+//	return left;
+//}
 
 ExpressionSyntax* Parser::ParseMultiplicativeExpression()
 {

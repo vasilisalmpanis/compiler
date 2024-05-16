@@ -9,6 +9,7 @@
 #include <cassert>
 
 enum class SyntaxKind : std::uint8_t {
+	// Tokens
 	BadToken,
 	EndOfFileToken,
 	WhitespaceToken,
@@ -20,6 +21,8 @@ enum class SyntaxKind : std::uint8_t {
 	OpenParenthesisToken,
 	CloseParenthesisToken,
 	Expression,
+
+	// Expressions
 	LiteralExpression,
 	BinaryExpression,
 	ParenthesizedExpression,

@@ -81,8 +81,7 @@ class Parser {
 		Parser(const Parser&) = delete;
 		Parser& operator=(const Parser&) = delete;
 		SyntaxTree*		Parse();
-		ExpressionSyntax*		ParseExpression();
-		ExpressionSyntax*		ParseTerm();
+	//	ExpressionSyntax*		ParseTerm();
 		ExpressionSyntax*		ParseMultiplicativeExpression();
 		std::vector<std::string>	GetDiagnostics() const { return m_diagnostics; }
 		void				setDiagnostics(std::vector<std::string> diagnostics) { m_diagnostics = diagnostics; }
@@ -91,6 +90,8 @@ class Parser {
 		SyntaxToken			current();
 		SyntaxToken			nextToken();
 		ExpressionSyntax*		parsePrimaryExpression();
+		ExpressionSyntax*		ParseExpression(int parentPrecedence = 0);
+		static int			GetBinaryOperatorPrecedence(SyntaxKind kind);
 		SyntaxToken			matchToken(SyntaxKind kind);
 
 		std::vector<std::string>	m_diagnostics;
