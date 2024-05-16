@@ -25,8 +25,8 @@ enum class SyntaxKind : std::uint8_t {
 	// Expressions
 	LiteralExpression,
 	BinaryExpression,
-	ParenthesizedExpression,
 	UnaryExpression,
+	ParenthesizedExpression,
 	SyntaxTreeExpression
 };
 

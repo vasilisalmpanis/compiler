@@ -41,10 +41,20 @@ SyntaxTree* Parser::Parse()
 
 ExpressionSyntax* Parser::ParseExpression(int parentPrecedence)
 {
-	ExpressionSyntax *left = parsePrimaryExpression();
+	ExpressionSyntax *left;
+	int unaryPrecedence = SyntaxFact::GetUnaryOperatorPrecedence(current().GetKind());
+	if (unaryPrecedence != 0 && unaryPrecedence >= parentPrecedence) {
+		SyntaxToken *operatorToken = new SyntaxToken(current());
+		nextToken();
+		ExpressionSyntax *operand = ParseExpression(unaryPrecedence);
+		left = new UnaryExpressionSyntax(operatorToken, operand);
+	}
+	else {
+		left = parsePrimaryExpression();
+	}
 	while (true)
 	{
-		int precedence = GetBinaryOperatorPrecedence(current().GetKind());
+		int precedence = SyntaxFact::GetBinaryOperatorPrecedence(current().GetKind());
 		if (precedence == 0 || precedence <= parentPrecedence) {
 			break;
 		}
@@ -56,7 +66,7 @@ ExpressionSyntax* Parser::ParseExpression(int parentPrecedence)
 	return left;
 }
 
-int Parser::GetBinaryOperatorPrecedence(SyntaxKind kind)
+int Parser::SyntaxFact::GetBinaryOperatorPrecedence(SyntaxKind kind)
 {
 	switch (kind) {
 		case SyntaxKind::PlusToken:
@@ -69,22 +79,16 @@ int Parser::GetBinaryOperatorPrecedence(SyntaxKind kind)
 			return 0;
 	}
 }
-
-//ExpressionSyntax* Parser::ParseTerm()
-//{
-//	ExpressionSyntax *left = parsePrimaryExpression();
-//	while (	current().GetKind() == SyntaxKind::PlusToken||
-//		current().GetKind() == SyntaxKind::MinusToken||
-//		current().GetKind() == SyntaxKind::StarToken||
-//		current().GetKind() == SyntaxKind::SlashToken
-//			) {
-//		SyntaxToken *operatorToken = new SyntaxToken(current());
-//		nextToken();
-//		ExpressionSyntax *right = ParseMultiplicativeExpression();
-//		left = new BinaryExpressionSyntax(left, operatorToken, right);
-//	}
-//	return left;
-//}
+ int Parser::SyntaxFact::GetUnaryOperatorPrecedence(SyntaxKind kind)
+{
+	switch (kind) {
+		case SyntaxKind::PlusToken:
+		case SyntaxKind::MinusToken:
+			return 3;
+		default:
+			return 0;
+	}
+}
 
 ExpressionSyntax* Parser::ParseMultiplicativeExpression()
 {

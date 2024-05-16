@@ -79,6 +79,25 @@ BinaryExpressionSyntax& BinaryExpressionSyntax::operator=(const BinaryExpression
 	return *this;
 }
 
+// UnaryExpressionSyntax
+
+UnaryExpressionSyntax::~UnaryExpressionSyntax()
+{
+}
+
+UnaryExpressionSyntax::UnaryExpressionSyntax(const UnaryExpressionSyntax& other)
+{
+	*this = other;
+}
+
+UnaryExpressionSyntax& UnaryExpressionSyntax::operator=(const UnaryExpressionSyntax& other)
+{
+	m_operatorToken = other.m_operatorToken;
+	m_operand = other.m_operand;
+	return *this;
+}
+
+
 // Parenthesis
 
 ParenthesizedExpressionSyntax::~ParenthesizedExpressionSyntax()

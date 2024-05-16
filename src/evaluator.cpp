@@ -27,9 +27,21 @@ int Evaluator::EvaluateExpression(ExpressionSyntax *root) {
 	LiteralExpressionSyntax *literal = dynamic_cast<LiteralExpressionSyntax *>(root);
 	BinaryExpressionSyntax *binary = dynamic_cast<BinaryExpressionSyntax *>(root);
 	ParenthesizedExpressionSyntax *parenthesized = dynamic_cast<ParenthesizedExpressionSyntax *>(root);
+	UnaryExpressionSyntax *unary = dynamic_cast<UnaryExpressionSyntax *>(root);
 
 	if (literal)
 		return literal->GetValue();
+	if (unary) {
+		ExpressionSyntax *operand = dynamic_cast<ExpressionSyntax *>(unary->GetOperand());
+		SyntaxToken *operatorToken = dynamic_cast<SyntaxToken *>(unary->GetOperatorToken());
+		int operandValue = EvaluateExpression(operand);
+		if (operatorToken->GetKind() == SyntaxKind::PlusToken)
+			return operandValue;
+		if (operatorToken->GetKind() == SyntaxKind::MinusToken)
+			return -operandValue;
+		else
+			throw std::runtime_error("Unexpected unary operator");
+	}
 	if (binary) {
 		std::vector<SyntaxNode *> children = binary->GetChildren();
 		ExpressionSyntax *left = dynamic_cast<ExpressionSyntax *>(children[0]);
