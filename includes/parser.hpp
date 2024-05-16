@@ -3,110 +3,113 @@
 #include "lexer.h"
 #include <vector>
 
-class ExpressionSyntax : virtual public SyntaxNode {
-	public:
-		ExpressionSyntax();
-		virtual ~ExpressionSyntax();
-		ExpressionSyntax(const ExpressionSyntax&);
-		ExpressionSyntax& operator=(const ExpressionSyntax&);
-		virtual SyntaxKind			GetKind();
-		virtual std::vector<SyntaxNode *>	GetChildren();
-};
+namespace Syntax {
+	class ExpressionSyntax : virtual public SyntaxNode {
+		public:
+			ExpressionSyntax();
+			virtual ~ExpressionSyntax();
+			ExpressionSyntax(const ExpressionSyntax&);
+			ExpressionSyntax& operator=(const ExpressionSyntax&);
+			virtual SyntaxKind			GetKind();
+			[[nodiscard]] virtual std::vector<SyntaxNode *>	GetChildren();
+	};
 
 
-class LiteralExpressionSyntax : virtual public ExpressionSyntax {
-	public:
-		LiteralExpressionSyntax(SyntaxToken literalToken)
-		{
-			m_literalToken = literalToken;
-		}
-		virtual ~LiteralExpressionSyntax();
-		LiteralExpressionSyntax(const LiteralExpressionSyntax&);
-		LiteralExpressionSyntax& operator=(const LiteralExpressionSyntax&);
-		virtual SyntaxKind			GetKind() override { return SyntaxKind::LiteralExpression; }
-		virtual std::vector<SyntaxNode *>	GetChildren() override { return std::vector<SyntaxNode *>(); }
-		SyntaxToken				GetNumberToken() { return m_literalToken; }
-		int					GetValue() { return std::get<int>(m_literalToken.GetValue()); }
-	private:
-		SyntaxToken m_literalToken;
-};
+	class LiteralExpressionSyntax : virtual public ExpressionSyntax {
+		public:
+			LiteralExpressionSyntax(SyntaxToken literalToken)
+			{
+				m_literalToken = literalToken;
+			}
+			virtual ~LiteralExpressionSyntax();
+			LiteralExpressionSyntax(const LiteralExpressionSyntax&);
+			LiteralExpressionSyntax& operator=(const LiteralExpressionSyntax&);
+			[[nodiscard]] virtual SyntaxKind			GetKind() override { return SyntaxKind::LiteralExpression; }
+			[[nodiscard]] virtual std::vector<SyntaxNode *>	GetChildren() override { return std::vector<SyntaxNode *>(); }
+			[[nodiscard]] SyntaxToken				GetNumberToken() { return m_literalToken; }
+			[[nodiscard]] int					GetValue() { return std::get<int>(m_literalToken.GetValue()); }
+		private:
+			SyntaxToken m_literalToken;
+	};
 
-class BinaryExpressionSyntax : virtual public ExpressionSyntax
-{
-	public:
-		BinaryExpressionSyntax(ExpressionSyntax *left, SyntaxToken *operatorToken, ExpressionSyntax *right)
-			: m_left(left), m_operatorToken(operatorToken), m_right(right)
-		{
-		}
-		virtual ~BinaryExpressionSyntax();
-		BinaryExpressionSyntax(const BinaryExpressionSyntax&);
-		BinaryExpressionSyntax& operator=(const BinaryExpressionSyntax&);
-		virtual SyntaxKind			GetKind() override { return SyntaxKind::BinaryExpression; }
-		virtual std::vector<SyntaxNode *>	GetChildren() override { return { m_left, m_operatorToken, m_right };}
-		ExpressionSyntax*			GetLeft() { return m_left; }
-		SyntaxToken*				GetOperatorToken() { return m_operatorToken; }
-		ExpressionSyntax*			GetRight() { return m_right; }
-	private:
-		ExpressionSyntax *m_left;
-		SyntaxToken *m_operatorToken;
-		ExpressionSyntax *m_right;
-};
+	class BinaryExpressionSyntax : virtual public ExpressionSyntax
+	{
+		public:
+			BinaryExpressionSyntax(ExpressionSyntax *left, SyntaxToken *operatorToken, ExpressionSyntax *right)
+				: m_left(left), m_operatorToken(operatorToken), m_right(right)
+			{
+			}
+			virtual ~BinaryExpressionSyntax();
+			BinaryExpressionSyntax(const BinaryExpressionSyntax&);
+			BinaryExpressionSyntax& operator=(const BinaryExpressionSyntax&);
+			[[nodiscard]] virtual SyntaxKind		GetKind() override { return SyntaxKind::BinaryExpression; }
+			[[nodiscard]] virtual std::vector<SyntaxNode *>	GetChildren() override { return { m_left, m_operatorToken, m_right };}
+			[[nodiscard]] ExpressionSyntax*			GetLeft() { return m_left; }
+			[[nodiscard]] SyntaxToken*			GetOperatorToken() { return m_operatorToken; }
+			[[nodiscard]] ExpressionSyntax*			GetRight() { return m_right; }
+		private:
+			ExpressionSyntax *m_left;
+			SyntaxToken *m_operatorToken;
+			ExpressionSyntax *m_right;
+	};
 
-class UnaryExpressionSyntax: virtual public ExpressionSyntax
-{
-	public:
-		UnaryExpressionSyntax(SyntaxToken *operatorToken, ExpressionSyntax *operand)
-			: m_operatorToken(operatorToken), m_operand(operand)
-		{
-		}
-		virtual ~UnaryExpressionSyntax();
-		UnaryExpressionSyntax(const UnaryExpressionSyntax&);
-		UnaryExpressionSyntax&			operator=(const UnaryExpressionSyntax&);
-		virtual SyntaxKind			GetKind() override { return SyntaxKind::UnaryExpression; }
-		virtual std::vector<SyntaxNode *>	GetChildren() override { return { m_operatorToken, m_operand};}
-		SyntaxToken*				GetOperatorToken() { return m_operatorToken; }
-		ExpressionSyntax*			GetOperand() { return m_operand; }
+	class UnaryExpressionSyntax: virtual public ExpressionSyntax
+	{
+		public:
+			UnaryExpressionSyntax(SyntaxToken *operatorToken, ExpressionSyntax *operand)
+				: m_operatorToken(operatorToken), m_operand(operand)
+			{
+			}
+			virtual ~UnaryExpressionSyntax();
+			UnaryExpressionSyntax(const UnaryExpressionSyntax&);
+			UnaryExpressionSyntax&				operator=(const UnaryExpressionSyntax&);
+			[[nodiscard]] virtual SyntaxKind		GetKind() override { return SyntaxKind::UnaryExpression; }
+			[[nodiscard]] virtual std::vector<SyntaxNode *>	GetChildren() override { return { m_operatorToken, m_operand};}
+			[[nodiscard]] SyntaxToken*			GetOperatorToken() { return m_operatorToken; }
+			[[nodiscard]] ExpressionSyntax*			GetOperand() { return m_operand; }
 	private:
 		SyntaxToken *m_operatorToken;
 		ExpressionSyntax *m_operand;
 };
 
-class ParenthesizedExpressionSyntax : virtual public ExpressionSyntax
-{
-	public:
-		ParenthesizedExpressionSyntax(SyntaxToken *openParenthesisToken, ExpressionSyntax *expression, SyntaxToken *closeParenthesisToken)
-			: m_openParenthesisToken(openParenthesisToken), m_expression(expression), m_closeParenthesisToken(closeParenthesisToken)
-		{
-		}
-		ParenthesizedExpressionSyntax(const ParenthesizedExpressionSyntax&);
-		virtual ~ParenthesizedExpressionSyntax();
-		ParenthesizedExpressionSyntax&		operator=(const ParenthesizedExpressionSyntax&);
-		virtual SyntaxKind			GetKind() override { return SyntaxKind::ParenthesizedExpression; }
-		virtual std::vector<SyntaxNode *>	GetChildren() override { return { m_openParenthesisToken, m_expression, m_closeParenthesisToken }; }
-		ExpressionSyntax			*GetExpression() { return m_expression; }
+	class ParenthesizedExpressionSyntax : virtual public ExpressionSyntax
+	{
+		public:
+			ParenthesizedExpressionSyntax(SyntaxToken *openParenthesisToken, ExpressionSyntax *expression, SyntaxToken *closeParenthesisToken)
+				: m_openParenthesisToken(openParenthesisToken), m_expression(expression), m_closeParenthesisToken(closeParenthesisToken)
+			{
+			}
+			ParenthesizedExpressionSyntax(const ParenthesizedExpressionSyntax&);
+			virtual ~ParenthesizedExpressionSyntax();
+			ParenthesizedExpressionSyntax&				operator=(const ParenthesizedExpressionSyntax&);
+			[[nodiscard]] virtual SyntaxKind			GetKind() override { return SyntaxKind::ParenthesizedExpression; }
+			[[nodiscard]] virtual std::vector<SyntaxNode *>		GetChildren() override { return { m_openParenthesisToken, m_expression, m_closeParenthesisToken }; }
+			[[nodiscard]] ExpressionSyntax				*GetExpression() { return m_expression; }
+	
+		private:
+			SyntaxToken *m_openParenthesisToken;
+			ExpressionSyntax *m_expression;
+			SyntaxToken *m_closeParenthesisToken;
+	};
+	class SyntaxTree;
+}
 
-	private:
-		SyntaxToken *m_openParenthesisToken;
-		ExpressionSyntax *m_expression;
-		SyntaxToken *m_closeParenthesisToken;
-};
 
-class SyntaxTree;
-
+using namespace Syntax;
 class Parser {
 	public:
 		Parser(std::string Text);
 		~Parser();
 		Parser(const Parser&) = delete;
 		Parser& operator=(const Parser&) = delete;
-		SyntaxTree*			Parse();
-		ExpressionSyntax*		ParseMultiplicativeExpression();
-		std::vector<std::string>	GetDiagnostics() const { return m_diagnostics; }
+		[[nodiscard]] SyntaxTree*	Parse();
+		[[nodiscard]] ExpressionSyntax*	ParseMultiplicativeExpression();
+		[[nodiscard]] std::vector<std::string>	GetDiagnostics() const { return m_diagnostics; }
 		void				setDiagnostics(std::vector<std::string> diagnostics) { m_diagnostics = diagnostics; }
 		struct SyntaxFact 
 		{
-			static int GetUnaryOperatorPrecedence(SyntaxKind kind);
-			static int GetBinaryOperatorPrecedence(SyntaxKind kind);
+			[[nodiscard]] static int GetUnaryOperatorPrecedence(SyntaxKind kind);
+			[[nodiscard]] static int GetBinaryOperatorPrecedence(SyntaxKind kind);
 		};
 	private:
 		SyntaxToken			peek(int offset);
@@ -124,15 +127,15 @@ class Parser {
 
 };
 
-class SyntaxTree : virtual public ExpressionSyntax {
+class Syntax::SyntaxTree : virtual public ExpressionSyntax {
 	public:
 		SyntaxTree(std::vector<std::string> diagnostics, ExpressionSyntax *root, SyntaxToken endOfFileToken);
 		virtual ~SyntaxTree();
 		SyntaxTree(const SyntaxTree&);
 		SyntaxTree&				operator=(const SyntaxTree&);
-		virtual SyntaxKind			GetKind() override { return SyntaxKind::SyntaxTreeExpression; }
-		virtual std::vector<SyntaxNode *>	GetChildren() override { return { m_root }; }
-		static ExpressionSyntax*		Parse(std::string text) {
+		[[nodiscard]] virtual SyntaxKind		GetKind() override { return SyntaxKind::SyntaxTreeExpression; }
+		[[nodiscard]] virtual std::vector<SyntaxNode *>	GetChildren() override { return { m_root }; }
+		[[nodiscard]] static ExpressionSyntax*		Parse(std::string text) {
 			Parser parser(text);
 			return parser.Parse();
 		}

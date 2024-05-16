@@ -55,19 +55,19 @@ class SyntaxToken : virtual public SyntaxNode {
 			m_text = text;
 		}	
 		virtual ~SyntaxToken() {}
-		SyntaxKind GetKind() override {
+		[[nodiscard]] SyntaxKind GetKind() override {
 			return m_kind;
 		}
-		std::vector<SyntaxNode *> GetChildren() override {
+		[[nodiscard]] std::vector<SyntaxNode *> GetChildren() override {
 			return std::vector<SyntaxNode *>();
 		}
-		std::string GetText() const {
+		[[nodiscard]] std::string GetText() const {
 			return m_text;
 		}
-		int GetPosition() const {
+		[[nodiscard]] int GetPosition() const {
 			return m_position;
 		}
-		std::variant<Number, String, SyntaxKind> GetValue() const {
+		[[nodiscard]] std::variant<Number, String, SyntaxKind> GetValue() const {
 			return m_value;
 		}
 		SyntaxToken(const SyntaxToken &other) {
@@ -109,8 +109,8 @@ class Lexer {
 		~Lexer();
 		Lexer(const Lexer&) = delete;
 		Lexer& operator=(const Lexer&) = delete;
-		SyntaxToken GetNextToken();
-		std::vector<std::string> GetDiagnostics() const {
+		[[nodiscard]] SyntaxToken GetNextToken();
+		[[nodiscard]] std::vector<std::string> GetDiagnostics() const {
 			return diagnostics;
 		}
 	private:
