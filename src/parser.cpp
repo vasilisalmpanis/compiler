@@ -35,7 +35,7 @@ Parser::~Parser()
 SyntaxTree* Parser::Parse()
 {
 	ExpressionSyntax *expression = ParseTerm();
-	SyntaxToken endOfFileToken = match(SyntaxKind::EndOfFileToken);
+	SyntaxToken endOfFileToken = matchToken(SyntaxKind::EndOfFileToken);
 	return new SyntaxTree(m_diagnostics, expression, endOfFileToken);
 }
 
@@ -122,11 +122,11 @@ ExpressionSyntax* Parser::parsePrimaryExpression()
 		SyntaxToken *left = new SyntaxToken(current());
 		nextToken();
 		ExpressionSyntax *expression = ParseExpression();
-		SyntaxToken *right = new SyntaxToken(match(SyntaxKind::CloseParenthesisToken));
+		SyntaxToken *right = new SyntaxToken(matchToken(SyntaxKind::CloseParenthesisToken));
 		return new ParenthesizedExpressionSyntax(left, expression, right);
 	}
-	SyntaxToken numberToken = match(SyntaxKind::NumberToken);
-	return new NumberExpressionSyntax(numberToken);
+	SyntaxToken numberToken = matchToken(SyntaxKind::NumberToken);
+	return new LiteralExpressionSyntax(numberToken);
 }
 
 /* 
@@ -134,7 +134,7 @@ ExpressionSyntax* Parser::parsePrimaryExpression()
  * @param kind: the expected kind
  * @return the token
 */
-SyntaxToken Parser::match(SyntaxKind kind)
+SyntaxToken Parser::matchToken(SyntaxKind kind)
 {
 	if (current().GetKind() == kind) {
 		return nextToken();

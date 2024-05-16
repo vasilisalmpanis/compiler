@@ -24,12 +24,12 @@ int Evaluator::evaluate() {
 }
 
 int Evaluator::EvaluateExpression(ExpressionSyntax *root) {
-	NumberExpressionSyntax *number = dynamic_cast<NumberExpressionSyntax *>(root);
+	LiteralExpressionSyntax *literal = dynamic_cast<LiteralExpressionSyntax *>(root);
 	BinaryExpressionSyntax *binary = dynamic_cast<BinaryExpressionSyntax *>(root);
 	ParenthesizedExpressionSyntax *parenthesized = dynamic_cast<ParenthesizedExpressionSyntax *>(root);
 
-	if (number)
-		return number->GetValue();
+	if (literal)
+		return literal->GetValue();
 	if (binary) {
 		std::vector<SyntaxNode *> children = binary->GetChildren();
 		ExpressionSyntax *left = dynamic_cast<ExpressionSyntax *>(children[0]);

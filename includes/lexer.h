@@ -9,18 +9,18 @@
 #include <cassert>
 
 enum class SyntaxKind : std::uint8_t {
-	NumberToken,
+	BadToken,
+	EndOfFileToken,
 	WhitespaceToken,
+	NumberToken,
 	PlusToken,
 	MinusToken,
 	StarToken,
 	SlashToken,
 	OpenParenthesisToken,
 	CloseParenthesisToken,
-	EndOfFileToken,
-	BadToken,
 	Expression,
-	NumberExpression,
+	LiteralExpression,
 	BinaryExpression,
 	ParenthesizedExpression,
 	UnaryExpression,

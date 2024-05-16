@@ -26,7 +26,7 @@ static void PrettyPrint(SyntaxNode *node, std::string indent, bool isLast)
 		}
 		else
 		{
-			NumberExpressionSyntax *num = dynamic_cast<NumberExpressionSyntax *>(node);
+			LiteralExpressionSyntax *num = dynamic_cast<LiteralExpressionSyntax *>(node);
 			if (num)
 			{
 				std::cout << std::get<int>(num->GetNumberToken().GetValue());

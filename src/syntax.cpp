@@ -47,18 +47,18 @@ std::vector<SyntaxNode *> ExpressionSyntax::GetChildren()
 	return std::vector<SyntaxNode *>();
 }
 
-NumberExpressionSyntax::~NumberExpressionSyntax()
+LiteralExpressionSyntax::~LiteralExpressionSyntax()
 {
 }
 
-NumberExpressionSyntax::NumberExpressionSyntax(const NumberExpressionSyntax& other)
+LiteralExpressionSyntax::LiteralExpressionSyntax(const LiteralExpressionSyntax& other)
 {
 	*this = other;
 }
 
-NumberExpressionSyntax& NumberExpressionSyntax::operator=(const NumberExpressionSyntax& other)
+LiteralExpressionSyntax& LiteralExpressionSyntax::operator=(const LiteralExpressionSyntax& other)
 {
-	m_numberToken = other.m_numberToken;
+	m_literalToken = other.m_literalToken;
 	return *this;
 }
 

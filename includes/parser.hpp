@@ -14,21 +14,21 @@ class ExpressionSyntax : virtual public SyntaxNode {
 };
 
 
-class NumberExpressionSyntax : virtual public ExpressionSyntax {
+class LiteralExpressionSyntax : virtual public ExpressionSyntax {
 	public:
-		NumberExpressionSyntax(SyntaxToken numberToken)
+		LiteralExpressionSyntax(SyntaxToken literalToken)
 		{
-			m_numberToken = numberToken;
+			m_literalToken = literalToken;
 		}
-		virtual ~NumberExpressionSyntax();
-		NumberExpressionSyntax(const NumberExpressionSyntax&);
-		NumberExpressionSyntax& operator=(const NumberExpressionSyntax&);
-		virtual SyntaxKind GetKind() override { return SyntaxKind::NumberExpression; }
+		virtual ~LiteralExpressionSyntax();
+		LiteralExpressionSyntax(const LiteralExpressionSyntax&);
+		LiteralExpressionSyntax& operator=(const LiteralExpressionSyntax&);
+		virtual SyntaxKind GetKind() override { return SyntaxKind::LiteralExpression; }
 		virtual std::vector<SyntaxNode *> GetChildren() override { return std::vector<SyntaxNode *>(); }
-		SyntaxToken GetNumberToken() { return m_numberToken; }
-		int GetValue() { return std::get<int>(m_numberToken.GetValue()); }
+		SyntaxToken GetNumberToken() { return m_literalToken; }
+		int GetValue() { return std::get<int>(m_literalToken.GetValue()); }
 	private:
-		SyntaxToken m_numberToken;
+		SyntaxToken m_literalToken;
 };
 
 class BinaryExpressionSyntax : virtual public ExpressionSyntax
@@ -91,7 +91,7 @@ class Parser {
 		SyntaxToken			current();
 		SyntaxToken			nextToken();
 		ExpressionSyntax*		parsePrimaryExpression();
-		SyntaxToken			match(SyntaxKind kind);
+		SyntaxToken			matchToken(SyntaxKind kind);
 
 		std::vector<std::string>	m_diagnostics;
 		std::vector<SyntaxToken>	m_tokens;
